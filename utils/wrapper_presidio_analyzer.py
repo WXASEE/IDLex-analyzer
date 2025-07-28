@@ -6,6 +6,7 @@ from presidio_analyzer.nlp_engine import (
 from typing import Literal
 from customized_recognizers.cpf_recognizer import CPFRecognizer
 from customized_recognizers.rg_recognizer import RGRecognizer
+from customized_recognizers.cep_recognizer import CEPRecognizer
 
 def create_model(nlp_engine_name: Literal['spacy', 'transformers'], models: list[dict[str, str]]) -> NlpEngine:
     engine_pt = NlpEngineProvider(nlp_configuration={
@@ -22,5 +23,6 @@ def create_analyzer(nlp_engine: NlpEngine, supported_languages: list[str]) -> An
 
     analyzer.registry.add_recognizer(CPFRecognizer())
     analyzer.registry.add_recognizer(RGRecognizer())
+    analyzer.registry.add_recognizer(CEPRecognizer())
 
     return analyzer

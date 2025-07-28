@@ -4,40 +4,17 @@ from utils.wrapper_presidio_analyzer import (
     create_analyzer
 )
 from utils.const import *
-from presidio_analyzer import RecognizerResult
-from customized_recognizers.cpf_recognizer import is_valid_cpf
-
-from presidio_analyzer import RecognizerResult
-from customized_recognizers.cpf_recognizer import is_valid_cpf
-
-def pos_processamento(texto: str, resultados: list[RecognizerResult]) -> list[RecognizerResult]:
-    novos_resultados = []
-    for res in resultados:
-        tipo = res.entity_type
-        start = res.start
-        end = res.end
-
-        if tipo == "CPF" and start is not None and end is not None:
-            trecho = texto[start:end]
-            valido = is_valid_cpf(trecho)
-            score = 1.0 if valido else 0.0
-
-            novo_res = RecognizerResult(
-                entity_type=res.entity_type,
-                start=res.start,
-                end=res.end,
-                score=score,
-                analysis_explanation=f"CPF {'válido' if valido else 'inválido'}"
-            )
-        else:
-            novo_res = res
-
-        novos_resultados.append(novo_res)
-
-    return novos_resultados
-
+from utils.pos_processamento import (
+    pos_processamento_cpf,
+    pos_processamento_cep
+)
+FUNCOES_POS_PROCESSAMENTO = [
+    pos_processamento_cpf,
+    pos_processamento_cep,
+]
 
 def main():
+    ## parser
     parser = argparse.ArgumentParser(description="Executa o analisador com reconhecedores customizados (CPF e RG)")
 
     parser.add_argument(
@@ -59,7 +36,7 @@ def main():
         type=str,
         nargs="+",
         default=ENTIDADES_SUPORTADAS + ENTIDADES_CRIADAS,
-        help="Entidades a buscar (ex: CPF RG EMAIL)"
+        help="Entidades a buscar (ex: --entities PERSON EMAIL_ADDRESS CPF RG)"
     )
 
     parser.add_argument(
@@ -76,6 +53,7 @@ def main():
         default="pt_core_news_lg",
         help="Nome do modelo SpaCy ou Transformers (padrão: pt_core_news_lg)"
     )
+    ## parser
 
     args = parser.parse_args()
 
@@ -87,18 +65,30 @@ def main():
 
     # Cria o analyzer com os recognizers customizados
     analyzer = create_analyzer(nlp_engine, supported_languages=[args.language])
-
+    
     # Executa a análise
     results = analyzer.analyze(
         text=args.text,
         language=args.language,
-        entities=args.entities
+        entities=args.entities if isinstance(args.entities, list) else [e.strip() for e in args.entities.split(' ') if e.strip()]
+
     )
 
-    # Mostra os resultados
-    resultado_processado = pos_processamento(args.text, results)
+    resultado_processado = results
+    for func in FUNCOES_POS_PROCESSAMENTO:
+        resultado_processado = func(args.text, resultado_processado)
+    
+    if DEBUG:
+        print(args.entities if isinstance(args.entities, list) else [e.strip() for e in args.entities.split(' ') if e.strip()])
+        print(resultado_processado)
+        #teste
+        from presidio_anonymizer import AnonymizerEngine
+        anonymizer = AnonymizerEngine()
+        anonymized_text = anonymizer.anonymize(text=args.text, analyzer_results=resultado_processado)
+        print(args.text)
+        print(anonymized_text)
 
-    print(resultado_processado)
+    ## TODO criar logica de guarda dados criptografados
 
 if __name__ == "__main__":
     main()
