@@ -1,6 +1,7 @@
 import argparse
 from utils.wrapper_presidio_analyzer import (
-    create_model, 
+    create_model_spacy, 
+    create_model_transformers,
     create_analyzer
 )
 from utils.const import *
@@ -44,28 +45,42 @@ def main():
         type=str,
         choices=["spacy", "transformers"],
         default="spacy",
-        help="Engine NLP a ser usada"
+        help="Engine NLP a ser usada (spacy ou transformers)"
     )
 
     parser.add_argument(
-        "--model-name",
+        "--transformer_model",
+        type=str,
+        default="pierreguillou/ner-bert-base-cased-pt-lenerbr",
+        help="Nome do modelo Transformers (padrão: pierreguillou/ner-bert-base-cased-pt-lenerbr)"
+    )
+    parser.add_argument(
+        "--spacy_model",
         type=str,
         default="pt_core_news_lg",
-        help="Nome do modelo SpaCy ou Transformers (padrão: pt_core_news_lg)"
+        help="Nome do modelo SpaCy(padrão: pt_core_news_lg)"
     )
     ## parser
 
     args = parser.parse_args()
 
-    # Cria o NLP engine
-    nlp_engine = create_model(
-        nlp_engine_name=args.nlp,
-        models=[{"lang_code": args.language, "model_name": args.model_name}]
-    )
+    if args.nlp == 'spacy':
+        nlp_engine = create_model_spacy(
+            nlp_engine_name=args.nlp,
+            language=args.language,
+            spacy_model=args.spacy_model
+            #models=[{"lang_code": args.language, "model_name": args.model_name}]
+        )
 
-    # Cria o analyzer com os recognizers customizados
+    elif args.nlp == 'transformers':
+       nlp_engine = create_model_transformers(
+            language=args.language,
+            spacy_model=args.spacy_model,
+            transformers_model=args.transformer_model
+       )
+
     analyzer = create_analyzer(nlp_engine, supported_languages=[args.language])
-    
+    #--------------------------------------------------------------------------------
     # Executa a análise
     results = analyzer.analyze(
         text=args.text,
