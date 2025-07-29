@@ -10,7 +10,7 @@ class EnderecoRecognizer(EntityRecognizer):
             supported_language="pt"
         )
 
-    def load(self):
+    def load(self) -> None:
         # Nenhum recurso externo a carregar
         pass
 
@@ -27,9 +27,8 @@ class EnderecoRecognizer(EntityRecognizer):
                 )
                 results.append(result)
 
-        # --- Regex para padrões de endereço ---
+        # --- Regex ---
         padroes = [
-            # Padrão: Rua/Avenida/...
             r"(Rua|Avenida|Av\.?|Travessa|Estrada|Rodovia|)\s+[\w\s\-º°]+?,\s*n[º°]?\s*\d+[^,\n]*?(Bairro\s+[\w\s\-]+)?[^,\n]*?(?=(,|\n|$))",
         ]
 

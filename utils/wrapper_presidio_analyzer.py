@@ -9,6 +9,7 @@ from customized_recognizers.cpf_recognizer import CPFRecognizer
 from customized_recognizers.rg_recognizer import RGRecognizer
 from customized_recognizers.cep_recognizer import CEPRecognizer
 from customized_recognizers.endereco_recognizer import EnderecoRecognizer
+from customized_recognizers.pessoa_recognizer import PessoaRecognizer
 
 def create_model_spacy(language : str, spacy_model : str) -> NlpEngine:
     engine_pt = NlpEngineProvider(nlp_configuration={
@@ -42,5 +43,6 @@ def create_analyzer(nlp_engine: object, supported_languages: list[str]) -> Analy
     analyzer.registry.add_recognizer(RGRecognizer())
     analyzer.registry.add_recognizer(CEPRecognizer())
     analyzer.registry.add_recognizer(EnderecoRecognizer())
+    analyzer.registry.add_recognizer(PessoaRecognizer())
 
     return analyzer
