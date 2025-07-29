@@ -4,10 +4,6 @@ Projeto em Python que utiliza o [Microsoft Presidio](https://github.com/microsof
 
 ---
 
-Perfeito! Aqui está a seção atualizada do `README.md` com o aviso adicionado logo **abaixo da tabela de entidades personalizadas**, como solicitado:
-
----
-
 ## 🧾 Entidades Reconhecidas
 
 ### ✅ Entidades padrão do Presidio
