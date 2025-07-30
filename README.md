@@ -30,8 +30,8 @@ Projeto em Python que utiliza o [Microsoft Presidio](https://github.com/microsof
 
 #### ⚠️ Atenção
 
-Ao mudar o modelo **Transformers**, você pode precisar ajustar como as entidades são mapeadas para o `Analyzer`.
-Cada `Analyzer` possui um arquivo correspondente na pasta `*customized_recognizers*`, onde essa lógica pode ser alterada para compatibilidade com o modelo escolhido.
+Ao mudar o modelo **Transformers**, você pode precisar ajustar como as entidades são mapeadas para o `Recognizer`.
+Cada `Recognizer` possui um arquivo correspondente na pasta `*customized_recognizers*`, onde essa lógica pode ser alterada para compatibilidade com o modelo escolhido.
 
 ---
 
