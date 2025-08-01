@@ -1,4 +1,11 @@
-from presidio_analyzer import PatternRecognizer, Pattern, EntityRecognizer, RecognizerResult
+"""Custom Presidio recognizers for Thai PII."""
+
+from presidio_analyzer import (
+    PatternRecognizer,
+    Pattern,
+    EntityRecognizer,
+    RecognizerResult,
+)
 from presidio_analyzer.nlp_engine import NlpArtifacts
 
 
@@ -16,7 +23,7 @@ class ThaiNationalIDRecognizer(PatternRecognizer):
             patterns=[pattern],
             name="ThaiNationalIDRecognizer",
             supported_language="th",
-            context=["บัตรประชาชน"],
+            context=["บัตรประชาชน", "เลขบัตร"],
         )
 
 
@@ -26,7 +33,7 @@ class ThaiPhoneRecognizer(PatternRecognizer):
     def __init__(self) -> None:
         phone_pattern = Pattern(
             name="Thai Phone Number",
-            regex=r"\b0\d[- ]\d{4}[- ]\d{4}\b",
+            regex=r"\b0\d(?:[- ]?\d{4}){2}\b",
             score=0.6,
         )
         super().__init__(
@@ -34,7 +41,7 @@ class ThaiPhoneRecognizer(PatternRecognizer):
             patterns=[phone_pattern],
             name="ThaiPhoneRecognizer",
             supported_language="th",
-            context=["โทรศัพท์"],
+            context=["โทรศัพท์", "เบอร์โทร"],
         )
 
 
@@ -46,7 +53,7 @@ class ThaiPersonNameRecognizer(EntityRecognizer):
             supported_entities=["TH_PERSON"],
             name="ThaiPersonNameRecognizer",
             supported_language="th",
-            context=["ชื่อ"],
+            context=["ชื่อ", "นาม"],
         )
 
     def load(self) -> None:

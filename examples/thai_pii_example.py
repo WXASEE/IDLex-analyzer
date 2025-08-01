@@ -24,7 +24,7 @@ def main():
 
     results = analyzer.analyze(text=text, language="th")
     for result in results:
-        print(result)
+        print(result.entity_type, text[result.start:result.end])
 
 
 if __name__ == "__main__":
