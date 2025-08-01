@@ -1,4 +1,5 @@
-﻿# 📚 Identificação de Dados Sensíveis em Documentos Jurídicos Brasileiros com Microsoft Presidio Analyzer
+# 📚 Identificação de Dados Sensíveis em Documentos Jurídicos Brasileiros com Microsoft Presidio Analyzer
+[English version](README_en.md)
 
 Projeto em Python que utiliza o [Microsoft Presidio](https://github.com/microsoft/presidio) com **reconhecedores personalizados** para entidades brasileiras como **CPF** e **RG**, permitindo identificar e classificar informações sensíveis em textos, com validação real de dados (como verificação de CPF válido).
 
